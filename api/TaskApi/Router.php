@@ -1,5 +1,7 @@
 <?php
 
+namespace Api\TaskApi;
+
 class Router {
     private $task;
 
@@ -39,21 +41,21 @@ class Router {
 
             if ($task) {
                 http_response_code(200);
-                return json_encode($task);
+                echo json_encode($task);
             }else {
                 http_response_code(404);
-                return json_encode(["error" => "Task not found."]);
+                echo json_encode(["error" => "Task not found."]);
             }
         }else {
             // All tasks using GET request
             $tasks = $this->task->getAllTasks();
-
+            //print_r($tasks);
             if (!empty($tasks)) {
                 http_response_code(200);
-                return json_encode($tasks);
+                echo json_encode($tasks);
             }else {
                 http_response_code(404);
-                return json_encode(["error" => "Task not found."]);
+                echo json_encode(["error" => "Task not found."]);
             }
         }
     }
@@ -61,51 +63,53 @@ class Router {
     // Handle POST request
     private function handlePostRequest() {
         $data = json_decode(file_get_contents("php://input"), true);
-
+        //print_r($data);
         // Validate data
         if (!isset($data['title']) || trim($data['title']) === "") {
             http_response_code(400);
-            return json_encode(["error" => "Title cannot be empty."]);
+            echo json_encode(["error" => "Title cannot be empty."]);
+            return;
         }
 
         // Validate priority
         $priorities = ["low", "medium", "high"];
         if (isset($data['priority']) && !in_array($data['priority'], $priorities)) {
             http_response_code(404);
-            return json_encode(["error" => "Valid priorities: low, medium, high"]);
+            echo json_encode(["error" => "Valid priorities: low, medium, high"]);
+            return;
         }
 
         // Add task
         $response = $this->task->createTask($data);
         http_response_code(200);
-        return json_encode($response);
+        echo json_encode($response);
     }
 
     // Handle PUT request
     private function handlePutRequest($id) {
         if(!$id) {
             http_response_code(400);
-            return json_encode(["error" => "Task ID required."]);
+            echo json_encode(["error" => "Task ID required."]);
         }
 
         $data = json_decode(file_get_contents("php://input"), true);
         // Update task
-        $response = $this->task->updateTask($data);
+        $response = $this->task->updateTask($id, $data);
         http_response_code(200);
-        return json_encode($response);
+        echo json_encode($response);
     }
 
     // Handle DELETE request
     private function handleDeleteRequest($id) {
         if(!$id) {
             http_response_code(400);
-            return json_encode(["error" => "Task ID required."]);
+            echo json_encode(["error" => "Task ID required."]);
         }
 
         // Delete task
         $response = $this->task->deleteTask($id);
         http_response_code(200);
-        return json_encode($response);
+        echo json_encode($response);
     }
 }
 

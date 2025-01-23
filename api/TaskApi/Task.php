@@ -1,23 +1,29 @@
 <?php
 
+namespace Api\TaskApi;
 
-class Task {
-     private $connection;
+class Task
+{
+    private $connection;
 
     // Creating database connection
-     public function __construct($dbConnection) {
+    public function __construct($dbConnection)
+    {
         $this->connection = $dbConnection;
-     }
+    }
 
     // Get all tasks
-    public function getAllTasks() {
+    public function getAllTasks()
+    {
         $sql = "SELECT * FROM tasks";
         $result = $this->connection->query($sql);
+        //print_r($result);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     // Get a single task by ID
-    public function getSingleTask($id) {
+    public function getSingleTask($id)
+    {
         $id = intval($id);
         $sql = "SELECT * FROM tasks WHERE id = $id";
         $result = $this->connection->query($sql);
@@ -25,7 +31,8 @@ class Task {
     }
 
     // Create  a task
-    public function createTask($data) {
+    public function createTask($data)
+    {
         $title = $data['title'];
         $description = $data['description'] ?? "";
         $priority = $data['priority'] ?? "low";
@@ -40,7 +47,8 @@ class Task {
     }
 
     // Update a task
-    public function updateTask($id, $data) {
+    public function updateTask($id, $data)
+    {
         $id = intval($id);
         $result = $this->connection->query("SELECT * FROM tasks WHERE id = $id");
 
@@ -72,7 +80,8 @@ class Task {
     }
 
     // Delete a task
-    public function deleteTask($id) {
+    public function deleteTask($id)
+    {
         $id = intval($id);
         $sql = "DELETE FROM tasks WHERE id = $id";
 

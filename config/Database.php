@@ -1,23 +1,53 @@
 <?php
 
-class Database {
-    private $serverName = "localhost";
-    private $userName = "root";
-    private $passWord = "";
-    private $dbName = "task_api";
+namespace Config;
+
+use mysqli;
+
+class Database
+{
+
+    private $host = "localhost";
+    private $db = "task_api";
+    private $user = "root";
+    private $password = "";
     private $conn;
 
-    public function __construct() {
-        $this->conn = new mysqli($this->serverName, $this->userName, $this->passWord, $this->dbName);
 
+    public function __construct()
+    {
+
+        $this->conn = new mysqli($this->host, $this->user, $this->password, $this->db);
+        //print_r(($this->conn));
         if ($this->conn->connect_error) {
-            die(json_encode(["error" => "Database connection failed"]));
+
+            die(json_encode(
+
+                [
+
+                    "error" => "Connection failed"
+
+                ]
+
+            ));
+
         }
+
     }
 
-    public function getDbConnection() {
+
+
+    public function getConnection()
+    {
+
         return $this->conn;
+
     }
+
+
+
 }
 
-?>
+
+
+
